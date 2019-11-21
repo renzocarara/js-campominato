@@ -42,11 +42,13 @@ do {
 
     mineNotFound = false; // assumo che il gioco finisca
 
-    userChoice = prompt("Inserisci una posizione da 1 a " + fieldSize + " :");
+    do { // attendo un input numerico valido dall'utente
+        userChoice = parseInt(prompt("Inserisci una posizione da 1 a " + fieldSize + " :"));
+    } while (userChoice < 1 || userChoice > fieldSize);
 
     //controllo se la posizione indicata dall'utente è libera (no mine)
     if (mineFieldArray[userChoice - 1] == 0) {
-
+        // l'utente ha trovato una posizione vuota
         mineFieldArray[userChoice - 1] = -1; // segno la posizione nell'array come già verificata
         attempts++; // incremento contatore tentativi validi effettuati
         mineNotFound = true; // mi segno che l'utente non è esploso ;)
@@ -56,7 +58,6 @@ do {
         }
 
     } else if (mineFieldArray[userChoice - 1] == -1) {
-
         // l'utente mi ha richiesto una posizione già verificata,
         // non la conto come tentativo valido e proseguo
         alert("ATTENZIONE: posizione già verificata!");
@@ -70,9 +71,6 @@ do {
 
 } while ((mineNotFound) && ((attempts) < maxAllowedAttempts));
 
-
-// la partita è finita
-console.log("Il tuo punteggio è:", attempts);
 
 // ---------------------------- FUNCTIONS -------------------------------
 
