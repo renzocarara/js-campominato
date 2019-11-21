@@ -28,17 +28,17 @@ mineFieldArray = initMineField(fieldSize, maxMines);
 do {
     console.log("SITUAZIONE CAMPO MINATO");
     // SCOMMENTARE IL FOR QUI SOTTO PER VEDERE DOVE SONO LE MINE
-    for (var i = 0; i < mineFieldArray.length; i++) {
-        console.log("mineFieldArray[", i, "]", mineFieldArray[i]);
-    }
-    //visualizzo su Console il campo minato con i tentativi fatti
     // for (var i = 0; i < mineFieldArray.length; i++) {
-    //     if ((mineFieldArray[i] == 0) || (mineFieldArray[i] == 1)) {
-    //         console.log("Posizione n.", i + 1, " -- O (ignota)");
-    //     } else {
-    //         console.log("Posizione n.", i + 1, " -- X (già verificata)");
-    //     }
+    //     console.log("mineFieldArray[", i, "]", mineFieldArray[i]);
     // }
+    // visualizzo su Console il campo minato con i tentativi fatti
+    for (var i = 0; i < mineFieldArray.length; i++) {
+        if ((mineFieldArray[i] == 0) || (mineFieldArray[i] == 1)) {
+            console.log("Posizione n.", i + 1, " -- O (ignota)");
+        } else {
+            console.log("Posizione n.", i + 1, " -- X (già verificata)");
+        }
+    }
 
     mineNotFound = false; // assumo che il gioco finisca
 
