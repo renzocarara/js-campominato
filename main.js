@@ -11,9 +11,9 @@
 // che cambia il range di numeri casuali.
 // Con difficoltà 0=> tra 1 e 100, con difficoltà 1 =>  tra 1 e 80, con difficoltà 2=> tra 1 e 50
 // ------------------------------------------------------------------------------------------------
-var fieldSize = 10; // dimensione del campo minato
+var fieldSize = 100; // dimensione del campo minato
 var mineFieldArray = []; // array che conterrà degli "0" (nessuna mina) e degli "1" (mina presente)
-var maxMines = 3; // massimo numero di mine sul campo
+var maxMines = 16; // massimo numero di mine sul campo
 var insertedMines = 0; // contatore per le mine da inserire sul campo (in fase di inizializzazione)
 var minePosition = 1; // indice che indica la posizione della mina (in fase di inizializzazione)
 var userChoice = 1; // input dell'utente
@@ -38,16 +38,30 @@ while (insertedMines < maxMines) {
         insertedMines++; // incremento contatore mine inserite
     }
 } // while
+level = parseInt(prompt("Inserisci il livello di difficoltà [0=facile 1=intermedio 2=difficile]"));
+switch (level) {
+    case 0:
+        fieldSize = 50; // livello difficile
+        break;
+    case 1:
+        fieldSize = 80; // livello medio
+        break;
+    default:
+        fieldSize = 100; // livello di default
+}
+console.log("fieldSize:", fieldSize);
 
 do {
     console.log("SITUAZIONE CAMPO MINATO");
+    // SCOMMENTARE IL FOR QUI SOTTO PER VEDERE DOVE SONO LE MINE
+    // for (var i = 0; i < fieldSize; i++) {
+    //     console.log("mineFieldArray[", i, "]", mineFieldArray[i]);
+    // }
     for (var i = 0; i < fieldSize; i++) {
-        // scommentare linea seguente per vedere dove sono le mine
-        // console.log("mineFieldArray[", i, "]", mineFieldArray[i]);
         if ((mineFieldArray[i] == 0) || (mineFieldArray[i] == 1)) {
-            console.log("Posizione n.", i, " -- O (ignota)");
+            console.log("Posizione n.", i + 1, " -- O (ignota)");
         } else {
-            console.log("Posizione n.", i, " -- X (già verificata)");
+            console.log("Posizione n.", i + 1, " -- X (già verificata)");
         }
     }
 
