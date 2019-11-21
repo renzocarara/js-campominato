@@ -17,9 +17,22 @@ var maxMines = 16; // massimo numero di mine sul campo
 var insertedMines = 0; // contatore per le mine da inserire sul campo (in fase di inizializzazione)
 var minePosition = 1; // indice che indica la posizione della mina (in fase di inizializzazione)
 var userChoice = 1; // input dell'utente
-var attempts = 1; // tentativi effettuati dall'utente
+var attempts = 0; // tentativi effettuati dall'utente
 var maxAllowedAttempts = fieldSize - maxMines; // massimo numero di tentativi consentiti all'utente
 var level = 0; // livello di difficoltà
+
+//chiedo all'utente il livello di gioco
+level = parseInt(prompt("Inserisci il livello di difficoltà [0=facile 1=intermedio 2=difficile]"));
+switch (level) {
+    case 0:
+        fieldSize = 50; // livello difficile
+        break;
+    case 1:
+        fieldSize = 80; // livello medio
+        break;
+    default:
+        fieldSize = 100; // livello di default (preimpostato - facile)
+}
 
 // preparazione campo minato, 0="nessuna mina", 1="mina presente"
 // inizializzo campo minato (array) come tutto vuoto (nessuna mina presente)
@@ -37,19 +50,7 @@ while (insertedMines < maxMines) {
         mineFieldArray[minePosition] = 1; // setto 1=mina presente
         insertedMines++; // incremento contatore mine inserite
     }
-} // while
-level = parseInt(prompt("Inserisci il livello di difficoltà [0=facile 1=intermedio 2=difficile]"));
-switch (level) {
-    case 0:
-        fieldSize = 50; // livello difficile
-        break;
-    case 1:
-        fieldSize = 80; // livello medio
-        break;
-    default:
-        fieldSize = 100; // livello di default
 }
-console.log("fieldSize:", fieldSize);
 
 do {
     console.log("SITUAZIONE CAMPO MINATO");
@@ -69,30 +70,37 @@ do {
 
     userChoice = prompt("Inserisci una posizione da 1 a " + fieldSize + " :")
 
+    //controllo se la posizione indicata dall'utente è libera (no mine)
     if (mineFieldArray[userChoice - 1] == 0) {
 
-        mineFieldArray[userChoice - 1] = -1; // marco la posizione come già richiesta
-        attempts++; // incremento contatore tentativi validi
+        mineFieldArray[userChoice - 1] = -1; // segno la posizione nell'array come già verificata
+        attempts++; // incremento contatore tentativi validi effettuati
         mineNotFound = true; // mi segno che l'utente non è esploso ;)
-        alert("BRAVO! non ci sono mine in questa posizione\nProsegui col gioco")
+        alert("BRAVO! non ci sono mine in questa posizione")
+        console.log("attempts:", attempts);
+        console.log("maxAllowedAttempts:", maxAllowedAttempts);
+        if ((attempts) == maxAllowedAttempts) {
+            alert("Complimenti hai raggiunto il massimo punteggio: " + maxAllowedAttempts + "\nGAME OVER")
+        }
 
     } else if (mineFieldArray[userChoice - 1] == -1) {
 
         // l'utente mi ha richiesto una posizione già verificata,
         // non la conto come tentativo valido e proseguo
         alert("ATTENZIONE: posizione già verificata!")
-        mineNotFound = true; // segno comunque che non ha trovato una mina
+        mineNotFound = true; // segno comunque che non ha trovato una mina, per proseguire
 
     } else {
-        // l'utente a beccato una mina
+        // l'utente ha beccato una mina
+        attempts++; // incremento contatore tentativi effettuati
         alert("BOOOOOM: hai trovato una mina!!!!!!! GAME OVER!\nIl tuo punteggio è: " + attempts)
     }
 
-} while (mineNotFound && attempts < maxAllowedAttempts);
+} while ((mineNotFound) && ((attempts) < maxAllowedAttempts));
 
 
 // la partita è finita
-console.log("Il tuo punteggio (numero di tentativi) è:", attempts);
+console.log("Il tuo punteggio è:", attempts);
 
 
 function generaRandom(min, max) {
