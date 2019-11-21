@@ -34,9 +34,9 @@ do {
     // visualizzo su Console il campo minato con i tentativi fatti
     for (var i = 0; i < mineFieldArray.length; i++) {
         if ((mineFieldArray[i] == 0) || (mineFieldArray[i] == 1)) {
-            console.log("Posizione n.", i + 1, " -- O (ignota)");
+            console.log("Posizione:", i + 1, "-- O (IGNOTA)");
         } else {
-            console.log("Posizione n.", i + 1, " -- X (già verificata)");
+            console.log("Posizione:", i + 1, "-- X (VERIFICATA)");
         }
     }
 
@@ -95,7 +95,7 @@ function initMineField(size, NumOfMines) {
 
     var insertedMines = 0; // contatore per le mine da inserire sul campo
     var minePosition = 1; // indice che indica la posizione della mina
-    var mineField = [];
+    var mineField = []; // array inizializzato, da restituire al chiamante
 
     // preparazione campo minato, 0="nessuna mina", 1="mina presente"
     // inizializzo campo minato (array) come tutto vuoto (nessuna mina presente)
