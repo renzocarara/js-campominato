@@ -118,16 +118,17 @@ function initMineField(size, NumOfMines) {
     var minePosition = 1; // indice che indica la posizione della mina
     var mineField = []; // array inizializzato, da restituire al chiamante
 
-    // preparazione campo minato, 0="nessuna mina", 1="mina presente"
+    // preparazione campo minato, posNoMine="nessuna mina", posMine="mina presente"
     // inizializzo campo minato (array) come tutto vuoto (nessuna mina presente)
     for (var i = 0; i < size; i++) {
-        mineField[i] = 0; // 0=nessuna mina
+        mineField[i] = posNoMine; // nessuna mina sul campo
     }
 
     //genero casualmente le mine e le inserisco sul campo minato (array)
     while (insertedMines < NumOfMines) {
 
-        minePosition = generaRandom(0, size - 1); // genero una posizione casuale
+        // genero una posizione casuale tra 0 e size-1 che utilizzero come indice dell'array (campo minato)
+        minePosition = generaRandom(0, size - 1);
 
         // inserisco la mina verificando che non sia già presente
         if (mineField[minePosition] == posNoMine) {
