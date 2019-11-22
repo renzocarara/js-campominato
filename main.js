@@ -57,7 +57,8 @@ do {
         }
     }
 
-    mineNotFound = false; // assumo che il gioco finisca subito a meno che l'utente sia fortunato...
+    // assumo che il gioco finisca subito a meno che l'utente sia fortunato...e trovi una posizione senza mina
+    mineNotFound = false;
 
     // recupero la posizione scelta dall'utente, controllo la validità
     do {
@@ -71,24 +72,24 @@ do {
         attempts++; // incremento contatore tentativi validi effettuati
         mineNotFound = true; // mi segno che l'utente non è esploso ;)
         alert("BRAVO! non ci sono mine in questa posizione");
-        if ((attempts) == maxAllowedAttempts) {
-            alert("GAME OVER \nComplimenti hai raggiunto il massimo punteggio: " + maxAllowedAttempts);
-        }
 
     } else if (mineFieldArray[userChoice - 1] == posChecked) {
         // l'utente mi ha richiesto una posizione già verificata,
         // non la conto come tentativo valido e proseguo
         alert("ATTENZIONE: posizione già verificata!");
         mineNotFound = true; // segno comunque che non ha trovato una mina, per proseguire
-
-    } else {
-        // l'utente ha beccato una mina
-        attempts++; // incremento contatore tentativi effettuati
-        alert("GAME OVER! \nBOOOOOM: hai trovato una mina!!!!!!! \nIl tuo punteggio è: " + attempts);
     }
 
 } while ((mineNotFound) && ((attempts) < maxAllowedAttempts));
 
+// il ciclo è concluso, GAME OVER, verifico il punteggio dell'utente
+if ((attempts) == maxAllowedAttempts) {
+    // il gioco è finito perchè l'utente ha fatto tutti i tentativi possibili senza trovare mine (è un genio!)
+    alert("GAME OVER \nComplimenti hai raggiunto il massimo punteggio: " + maxAllowedAttempts);
+} else {
+    // il gioco è finito perchè l'utente ha beccato una mina
+    alert("GAME OVER! \nBOOOOOM: hai trovato una mina!!!!!!! \nIl tuo punteggio è: " + attempts);
+}
 
 // ---------------------------- FUNCTIONS -------------------------------
 
