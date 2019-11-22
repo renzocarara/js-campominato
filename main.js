@@ -45,9 +45,9 @@ mineFieldArray = initMineField(fieldSizeMax, maxMines);
 do {
     console.log("SITUAZIONE CAMPO MINATO");
     // SCOMMENTARE IL FOR QUI SOTTO PER VEDERE DOVE SONO LE MINE
-    for (var i = 0; i < mineFieldArray.length; i++) {
-        console.log("mineFieldArray[", i, "]", mineFieldArray[i]);
-    }
+    // for (var i = 0; i < mineFieldArray.length; i++) {
+    //     console.log("mineFieldArray[", i, "]", mineFieldArray[i]);
+    // }
     // visualizzo su Console il campo minato con i tentativi fatti
     for (var i = 0; i < mineFieldArray.length; i++) {
         if ((mineFieldArray[i] == posNoMine) || (mineFieldArray[i] == posMine)) {
