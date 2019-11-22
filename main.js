@@ -162,9 +162,12 @@ function generaRandom(min, max) {
 }
 
 function NumNotValid(choice, min, max) {
-    // funzione generica, verifica che "choice" sia un numero e compreso tra min e max
+    // funzione generica, verifica se "choice" sia un numero e se è compreso tra min e max
+    // basta una delle 3 condizioni non vera ed il numero non è valido, viene restituito TRUE
     if ((isNaN(choice)) || (choice < min) || (choice > max)) {
-        return true;
+        return true; // non è un numero valido
+    } else {
+        return false; // il numero è valido
     }
 }
 
