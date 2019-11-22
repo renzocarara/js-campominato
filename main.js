@@ -16,9 +16,9 @@ var fieldSizeMax = 100; // dimensione massima del campo minato, quindi posizione
 var mineFieldArray = []; // campo minato, array che conterrà elementi che indicano mina presente o non presente
 var maxMines = 16; // massimo numero di mine sul campo
 // -----------------------------------------------------------------------------
-var posNoMine = 0; // india mina NON presente
-var posMine = 1; // indica mina presente
-var posChecked = -1; // indica posizione già verificata dall'utente
+var isNoMine = 0; // indica mina NON presente
+var isMine = 1; // indica mina presente
+var isChecked = -1; // indica posizione già verificata dall'utente
 // -----------------------------------------------------------------------------
 var userChoice = 1; // variabile dove inserire l'input dell'utente
 var attempts = 0; // tentativi effettuati dall'utente
@@ -50,7 +50,7 @@ do {
     // }
     // visualizzo su Console il campo minato con i tentativi fatti
     for (var i = 0; i < mineFieldArray.length; i++) {
-        if ((mineFieldArray[i] == posNoMine) || (mineFieldArray[i] == posMine)) {
+        if ((mineFieldArray[i] == isNoMine) || (mineFieldArray[i] == isMine)) {
             console.log("Posizione:", i + 1, "-- O (IGNOTA)");
         } else {
             console.log("Posizione:", i + 1, "-- X (VERIFICATA)");
@@ -66,14 +66,14 @@ do {
     } while (NumNotValid(userChoice, fieldSizeMin, fieldSizeMax));
 
     //controllo se la posizione indicata dall'utente è libera (non c'è una mina)
-    if (mineFieldArray[userChoice - 1] == posNoMine) {
+    if (mineFieldArray[userChoice - 1] == isNoMine) {
         // l'utente ha trovato una posizione libera
-        mineFieldArray[userChoice - 1] = posChecked; // segno la posizione nell'array come già verificata
+        mineFieldArray[userChoice - 1] = isChecked; // segno la posizione nell'array come già verificata
         attempts++; // incremento contatore tentativi validi effettuati
         mineNotFound = true; // mi segno che l'utente non è esploso ;)
         alert("BRAVO! non ci sono mine in questa posizione");
 
-    } else if (mineFieldArray[userChoice - 1] == posChecked) {
+    } else if (mineFieldArray[userChoice - 1] == isChecked) {
         // l'utente mi ha richiesto una posizione già verificata,
         // non la conto come tentativo valido e proseguo
         alert("ATTENZIONE: posizione già verificata!");
@@ -118,10 +118,10 @@ function initMineField(size, NumOfMines) {
     var minePosition = 1; // indice che indica la posizione della mina
     var mineField = []; // array inizializzato, da restituire al chiamante
 
-    // preparazione campo minato, posNoMine="nessuna mina", posMine="mina presente"
+    // preparazione campo minato, isNoMine="nessuna mina", isMine="mina presente"
     // inizializzo campo minato (array) come tutto vuoto (nessuna mina presente)
     for (var i = 0; i < size; i++) {
-        mineField[i] = posNoMine; // nessuna mina sul campo
+        mineField[i] = isNoMine; // nessuna mina sul campo
     }
 
     //genero casualmente le mine e le inserisco sul campo minato (array)
@@ -131,8 +131,8 @@ function initMineField(size, NumOfMines) {
         minePosition = generaRandom(0, size - 1);
 
         // inserisco la mina verificando che non sia già presente
-        if (mineField[minePosition] == posNoMine) {
-            mineField[minePosition] = posMine; // setto mina presente
+        if (mineField[minePosition] == isNoMine) {
+            mineField[minePosition] = isMine; // setto mina presente
             insertedMines++; // incremento contatore mine inserite
         }
     }
