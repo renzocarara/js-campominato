@@ -17,6 +17,7 @@ var maxMines = 16; // massimo numero di mine sul campo
 var userChoice = 1; // input dell'utente
 var attempts = 0; // tentativi effettuati dall'utente
 var maxAllowedAttempts = fieldSize - maxMines; // massimo numero di tentativi consentiti all'utente
+var mineNotFound; // flag da settare dopo verifica della scelta utente
 
 
 //chiedo all'utente il livello di gioco, in base al livello stabilisco dimensione del campo minato
