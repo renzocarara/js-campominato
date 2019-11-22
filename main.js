@@ -41,55 +41,72 @@ fieldSizeMax = setfieldSizeMax(level);
 // inizializzo il mio campo minato, passo dimensione e numero di mine che conterrà
 mineFieldArray = initMineField(fieldSizeMax, maxMines);
 
-// il campo minato è pronto, inizio a ciclare per recuperare gli input dell'utente
-do {
-    console.log("SITUAZIONE CAMPO MINATO");
-    // SCOMMENTARE IL FOR QUI SOTTO PER VEDERE DOVE SONO LE MINE
-    // for (var i = 0; i < mineFieldArray.length; i++) {
-    //     console.log("mineFieldArray[", i, "]", mineFieldArray[i]);
-    // }
-    // visualizzo su Console il campo minato con i tentativi fatti
-    for (var i = 0; i < mineFieldArray.length; i++) {
-        if ((mineFieldArray[i] == isNoMine) || (mineFieldArray[i] == isMine)) {
-            console.log("Posizione:", i + 1, "-- O (IGNOTA)");
+
+// SCOMMENTARE IL FOR QUI SOTTO PER VEDERE IN CONSOLE DOVE SONO LE MINE
+// console.log("SITUAZIONE CAMPO MINATO");
+// for (var i = 0; i < mineFieldArray.length; i++) {
+//     console.log("mineFieldArray[", i, "]", mineFieldArray[i]);
+// }
+
+// costruisco il campo minato sulla pagina HTML
+HTMLBuildMineField(mineFieldArray.length);
+
+// PROBLEMA: la finestrella del prompt mi appare prima che la pagina HTML venga visualizzata e quindi mi blocca
+// l'esecuzione dello script finchè non gli do' un input, mentre io voglio vedere già la pagina HTML che ho appena
+// costruito.
+// VAI CON LA SPERIMENTAZIONE...
+// incapsulo tutto il codice che segue, fino a fine script, in una setTimeout di 500ms, che mi consente di ritardare
+// l'esecuzione del codice (quindi anche la "prompt") di mezzo secondo,
+// questo perchè altrimenti l'istruzione prompt prende il controllo e blocca l'esecuzione dello script
+// prima ancora che la pagina HTML, che ho costruito e valorizzato poco sopra, possa essere visualizzata dal browser
+// in questo modo do' tempo al browser stesso di visualizzarmi la pagina e dopo 500ms lo script procede con il "prompt"
+setTimeout(function() {
+
+    // il campo minato è pronto, inizio a ciclare per recuperare gli input dell'utente
+    do {
+        // assumo che il gioco finisca subito a meno che l'utente sia fortunato...e trovi una posizione senza mina
+        mineNotFound = false;
+
+        // recupero la posizione scelta dall'utente, controllo la validità
+        do {
+            userChoice = parseInt(prompt("Inserisci una posizione da" + fieldSizeMin + "a " + fieldSizeMax + " :"));
+        } while (NumNotValid(userChoice, fieldSizeMin, fieldSizeMax));
+
+        //controllo se la posizione indicata dall'utente è libera (non c'è una mina)
+        if (mineFieldArray[userChoice - 1] == isNoMine) {
+            // l'utente ha trovato una posizione libera
+            mineFieldArray[userChoice - 1] = isChecked; // segno la posizione nell'array come già verificata
+            attempts++; // incremento contatore tentativi validi effettuati
+            mineNotFound = true; // mi segno che l'utente non è esploso ;)
+            alert("SEI FORTUNATO! non ci sono mine in questa posizione");
+
+            // aggiorno il campo minato sulla pagina HTML
+            HTMLUpdateMineField(userChoice - 1, isChecked);
+
+        } else if (mineFieldArray[userChoice - 1] == isChecked) {
+            // l'utente mi ha richiesto una posizione già verificata,
+            // non la conto come tentativo valido e proseguo
+            alert("ATTENZIONE: posizione già verificata!");
+            mineNotFound = true; // segno comunque che non ha trovato una mina, per proseguire
         } else {
-            console.log("Posizione:", i + 1, "-- X (VERIFICATA)");
+            // l'utente ha beccato una mina
+            // aggiorno il campo minato sulla pagina HTML
+            HTMLUpdateMineField(userChoice - 1, isMine);
         }
     }
 
-    // assumo che il gioco finisca subito a meno che l'utente sia fortunato...e trovi una posizione senza mina
-    mineNotFound = false;
+    while ((mineNotFound) && ((attempts) < maxAllowedAttempts));
 
-    // recupero la posizione scelta dall'utente, controllo la validità
-    do {
-        userChoice = parseInt(prompt("Inserisci una posizione da" + fieldSizeMin + "a " + fieldSizeMax + " :"));
-    } while (NumNotValid(userChoice, fieldSizeMin, fieldSizeMax));
-
-    //controllo se la posizione indicata dall'utente è libera (non c'è una mina)
-    if (mineFieldArray[userChoice - 1] == isNoMine) {
-        // l'utente ha trovato una posizione libera
-        mineFieldArray[userChoice - 1] = isChecked; // segno la posizione nell'array come già verificata
-        attempts++; // incremento contatore tentativi validi effettuati
-        mineNotFound = true; // mi segno che l'utente non è esploso ;)
-        alert("BRAVO! non ci sono mine in questa posizione");
-
-    } else if (mineFieldArray[userChoice - 1] == isChecked) {
-        // l'utente mi ha richiesto una posizione già verificata,
-        // non la conto come tentativo valido e proseguo
-        alert("ATTENZIONE: posizione già verificata!");
-        mineNotFound = true; // segno comunque che non ha trovato una mina, per proseguire
+    // il ciclo è concluso, GAME OVER, verifico il punteggio dell'utente
+    if ((attempts) == maxAllowedAttempts) {
+        // il gioco è finito perchè l'utente ha fatto tutti i tentativi possibili senza trovare mine (è un genio!)
+        alert("COMPLIMENTI!! hai raggiunto il massimo punteggio: " + maxAllowedAttempts + "\nGAME OVER");
+    } else {
+        // il gioco è finito perchè l'utente ha beccato una mina
+        alert("BOOOOOM!! Hai trovato una mina! \nGAME OVER! \nIl tuo punteggio è: " + attempts);
     }
 
-} while ((mineNotFound) && ((attempts) < maxAllowedAttempts));
-
-// il ciclo è concluso, GAME OVER, verifico il punteggio dell'utente
-if ((attempts) == maxAllowedAttempts) {
-    // il gioco è finito perchè l'utente ha fatto tutti i tentativi possibili senza trovare mine (è un genio!)
-    alert("GAME OVER \nComplimenti hai raggiunto il massimo punteggio: " + maxAllowedAttempts);
-} else {
-    // il gioco è finito perchè l'utente ha beccato una mina
-    alert("GAME OVER! \nBOOOOOM: hai trovato una mina!!!!!!! \nIl tuo punteggio è: " + attempts);
-}
+}, 500); // fine blocco "ritardato"
 
 // ---------------------------- FUNCTIONS -------------------------------
 
@@ -148,5 +165,35 @@ function NumNotValid(choice, min, max) {
     // funzione generica, verifica che "choice" sia un numero e compreso tra min e max
     if ((isNaN(choice)) || (choice < min) || (choice > max)) {
         return true;
+    }
+}
+
+// -------------------------------- HTML ---------------------------------------
+
+function HTMLBuildMineField(mineFieldLength) {
+    // costruisco il campo minato sulla pagina HTML
+    // una specie di tabella fatta da righe (5, 8 o 10) di 10 elementi <span>
+    for (var i = 0; i < mineFieldLength; i++) {
+        document.getElementById("mineFieldContainer").innerHTML += "<span>" + (i + 1) + "</span>";
+        if (((i + 1) % 10) == 0) {
+            // ogni 10 elementi vado a capo, cioè costruisco righe lunghe 10 elementi <span>
+            document.getElementById("mineFieldContainer").innerHTML += "<br>";
+        }
+    }
+}
+
+function HTMLUpdateMineField(position, setTo) {
+    // recupero tutti i riferimenti agli elementi con tag <span>
+    var spans = document.getElementsByTagName("span");
+
+    if (setTo == isChecked) {
+        // setto la posizione come già verificata
+        spans[position].setAttribute("class", "checked");
+        spans[position].innerHTML = "<i class=\"fas fa-check\"></i>";
+    } else {
+        // setto la posizione come mina trovata
+        spans[position].setAttribute("class", "bomb");
+        spans[position].innerHTML = "<i class=\"fas fa-bomb\"></i>";
+
     }
 }
