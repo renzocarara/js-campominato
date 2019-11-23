@@ -8,7 +8,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 100px;
+    background-color: #f2f2f2;
+    height: 100vh;
+    padding-top: 170px;
 }
 
 #mineFieldContainer {
@@ -27,10 +29,37 @@ span {
     text-align: center;
 }
 
+sub {
+    font-size: 8px;
+}
+
 .checked {
     background-color: lightgreen;
 }
 
 .bomb {
     background-color: coral;
+}
+
+#score {
+    color: mediumseagreen;
+}
+
+#maxScore {
+    font-size: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
+.visible {
+    display: block;
+}
+
+#scoreContainer span {
+    background-color: inherit;
+    border: none;
+    display: inline;
+    font-weight: bold;
 }

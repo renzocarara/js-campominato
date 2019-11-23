@@ -15,14 +15,14 @@ var fieldSizeMin = 1; // dimensione minima del campo minato, quindi posizione mi
 var fieldSizeMax = 100; // dimensione massima del campo minato, quindi posizione massima selezionabile
 var mineFieldArray = []; // campo minato, array che conterrà elementi che indicano mina presente o non presente
 var maxMines = 16; // massimo numero di mine sul campo
+var maxAllowedAttempts = fieldSizeMax - maxMines; // massimo numero di tentativi consentiti all'utente
 // -----------------------------------------------------------------------------
 var isNoMine = 0; // indica mina NON presente
 var isMine = 1; // indica mina presente
 var isChecked = -1; // indica posizione già verificata dall'utente
 // -----------------------------------------------------------------------------
-var userChoice = 1; // variabile dove inserire l'input dell'utente
+var userChoice = -1; // variabile dove inserire l'input dell'utente
 var attempts = 0; // tentativi effettuati dall'utente
-var maxAllowedAttempts = fieldSizeMax - maxMines; // massimo numero di tentativi consentiti all'utente
 var mineNotFound; // flag da settare dopo verifica della scelta utente
 // -----------------------------------------------------------------------------
 var level = 0; // livello di gioco scelto dall'utente [0=facile 1=medio 2=difficile]
@@ -37,7 +37,7 @@ while (NumNotValid(level, levelMin, levelMax));
 
 // passo il livello a una funzione che mi ritorna la dimensione del campo minato
 fieldSizeMax = setfieldSizeMax(level);
-
+maxAllowedAttempts = fieldSizeMax - maxMines; // calcolo massimo numero di tentativi consentiti all'utente
 // inizializzo il mio campo minato, passo dimensione e numero di mine che conterrà
 mineFieldArray = initMineField(fieldSizeMax, maxMines);
 
@@ -49,7 +49,7 @@ mineFieldArray = initMineField(fieldSizeMax, maxMines);
 // }
 
 // costruisco il campo minato sulla pagina HTML
-HTMLBuildMineField(mineFieldArray.length);
+HTMLbuildMineField(mineFieldArray.length);
 
 // PROBLEMA: la finestrella del prompt mi appare prima che la pagina HTML venga visualizzata e quindi mi blocca
 // l'esecuzione dello script finchè non gli do' un input, mentre io voglio vedere già la pagina HTML che ho appena
@@ -60,6 +60,8 @@ HTMLBuildMineField(mineFieldArray.length);
 // questo perchè altrimenti l'istruzione prompt prende il controllo e blocca l'esecuzione dello script
 // prima ancora che la pagina HTML, che ho costruito e valorizzato poco sopra, possa essere visualizzata dal browser
 // in questo modo do' tempo al browser stesso di visualizzarmi la pagina e dopo 500ms lo script procede con il "prompt"
+
+
 setTimeout(function() {
 
     // il campo minato è pronto, inizio a ciclare per recuperare gli input dell'utente
@@ -70,7 +72,13 @@ setTimeout(function() {
         // recupero la posizione scelta dall'utente, controllo la validità
         do {
             userChoice = parseInt(prompt("Inserisci una posizione da" + fieldSizeMin + "a " + fieldSizeMax + " :"));
-        } while (NumNotValid(userChoice, fieldSizeMin, fieldSizeMax));
+            //myVar = setTimeout("javascript function", 3000);
+            // setTimeout(function() {
+            //     userChoice = parseInt(prompt("Inserisci una posizione da" + fieldSizeMin + "a " + fieldSizeMax + " :"));
+            // }, 2000);
+            // userChoice = parseInt(prompt("Inserisci una posizione da" + fieldSizeMin + "a " + fieldSizeMax + " :"));
+        }
+        while (NumNotValid(userChoice, fieldSizeMin, fieldSizeMax));
 
         //controllo se la posizione indicata dall'utente è libera (non c'è una mina)
         if (mineFieldArray[userChoice - 1] == isNoMine) {
@@ -81,7 +89,7 @@ setTimeout(function() {
             alert("SEI FORTUNATO! non ci sono mine in questa posizione");
 
             // aggiorno il campo minato sulla pagina HTML
-            HTMLUpdateMineField(userChoice - 1, isChecked);
+            HTMLupdateMineField(userChoice - 1, isChecked);
 
         } else if (mineFieldArray[userChoice - 1] == isChecked) {
             // l'utente mi ha richiesto una posizione già verificata,
@@ -91,20 +99,24 @@ setTimeout(function() {
         } else {
             // l'utente ha beccato una mina
             // aggiorno il campo minato sulla pagina HTML
-            HTMLUpdateMineField(userChoice - 1, isMine);
+            HTMLupdateMineField(userChoice - 1, isMine);
         }
     }
 
     while ((mineNotFound) && ((attempts) < maxAllowedAttempts));
 
     // il ciclo è concluso, GAME OVER, verifico il punteggio dell'utente
-    if ((attempts) == maxAllowedAttempts) {
+    if (attempts == maxAllowedAttempts) {
         // il gioco è finito perchè l'utente ha fatto tutti i tentativi possibili senza trovare mine (è un genio!)
         alert("COMPLIMENTI!! hai raggiunto il massimo punteggio: " + maxAllowedAttempts + "\nGAME OVER");
     } else {
         // il gioco è finito perchè l'utente ha beccato una mina
         alert("BOOOOOM!! Hai trovato una mina! \nGAME OVER! \nIl tuo punteggio è: " + attempts);
     }
+
+    // visualizzo punteggio su pagina HTML
+    HTMLdisplayScore(attempts, maxAllowedAttempts);
+
 
 }, 500); // fine blocco "ritardato"
 
@@ -173,7 +185,7 @@ function NumNotValid(choice, min, max) {
 
 // -------------------------------- HTML ---------------------------------------
 
-function HTMLBuildMineField(mineFieldLength) {
+function HTMLbuildMineField(mineFieldLength) {
     // costruisco il campo minato sulla pagina HTML
     // una specie di tabella fatta da righe (5, 8 o 10) di 10 elementi <span>
     for (var i = 0; i < mineFieldLength; i++) {
@@ -185,18 +197,31 @@ function HTMLBuildMineField(mineFieldLength) {
     }
 }
 
-function HTMLUpdateMineField(position, setTo) {
+function HTMLupdateMineField(position, setTo) {
     // recupero tutti i riferimenti agli elementi con tag <span>
     var spans = document.getElementsByTagName("span");
 
     if (setTo == isChecked) {
         // setto la posizione come già verificata
         spans[position].setAttribute("class", "checked");
-        spans[position].innerHTML = "<i class=\"fas fa-check\"></i>";
+        spans[position].innerHTML = "<i class=\"fas fa-check\"></i><sub>" + (position + 1) + "</sub>";
     } else {
         // setto la posizione come mina trovata
         spans[position].setAttribute("class", "bomb");
         spans[position].innerHTML = "<i class=\"fas fa-bomb\"></i>";
 
     }
+}
+
+function HTMLdisplayScore(score, maxScore) {
+    // visualizzo punteggio dell'utente
+
+    // rendo visibile il contenitore del punteggio
+    document.getElementById("scoreContainer").setAttribute("class", "visible");
+    // visualizzo il punteggio massimo realizzabile
+    document.getElementById("maxScore").innerHTML = maxScore;
+    // visualizzo il punteggio finale dell'utente
+    document.getElementById("score").innerHTML = score;
+
+
 }
